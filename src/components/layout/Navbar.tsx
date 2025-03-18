@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,26 +37,37 @@ const Navbar = () => {
               transition={{ duration: 0.5 }}
               className="flex-shrink-0"
             >
-              <span className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-ecosync-green-dark to-ecosync-blue-dark">
+              <Link to="/" className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-ecosync-green-dark to-ecosync-blue-dark">
                 EcoSync
-              </span>
+              </Link>
             </motion.div>
             <nav className="hidden md:block ml-10">
               <ul className="flex space-x-8">
-                {['Home', 'Features', 'Technology', 'About'].map((item) => (
-                  <motion.li
-                    key={item}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <a
-                      href={`#${item.toLowerCase()}`}
-                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200"
-                    >
-                      {item}
-                    </a>
-                  </motion.li>
-                ))}
+                <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link to="/" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                    Home
+                  </Link>
+                </motion.li>
+                <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <a href="/#features" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                    Features
+                  </a>
+                </motion.li>
+                <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <a href="/#technology" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                    Technology
+                  </a>
+                </motion.li>
+                <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <a href="/#about" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                    About
+                  </a>
+                </motion.li>
+                <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link to="/iot-dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors duration-200">
+                    IoT Dashboard
+                  </Link>
+                </motion.li>
               </ul>
             </nav>
           </div>
@@ -90,16 +102,41 @@ const Navbar = () => {
           className="md:hidden glass-morphism"
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {['Home', 'Features', 'Technology', 'About'].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item}
-              </a>
-            ))}
+            <Link
+              to="/"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <a
+              href="/#features"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Features
+            </a>
+            <a
+              href="/#technology"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Technology
+            </a>
+            <a
+              href="/#about"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </a>
+            <Link
+              to="/iot-dashboard"
+              className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-white/10 transition-colors duration-200"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              IoT Dashboard
+            </Link>
             <div className="pt-2 pb-1">
               <button
                 className="w-full px-4 py-2 rounded-full bg-gradient-to-r from-ecosync-green-dark to-ecosync-blue-dark text-white text-sm font-medium transition-all duration-200"
