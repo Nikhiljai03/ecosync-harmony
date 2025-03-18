@@ -2,11 +2,14 @@
 import { useState, useEffect } from 'react';
 import { AggregatedSensorData, BlockchainStatusData, EntityType, GreenCreditScoreData } from '@/types/iot';
 import { fetchEntityData, calculateGreenScore, storeOnBlockchain } from '@/lib/iotService';
+import { FineAssessment, RecommendationItem, getSustainabilityRecommendations } from '@/lib/sustainabilityRecommendations';
 
 export const useIoTData = (entityType: EntityType, entityId: string) => {
   const [sensorData, setSensorData] = useState<AggregatedSensorData | null>(null);
   const [creditScore, setCreditScore] = useState<GreenCreditScoreData | null>(null);
   const [blockchainStatus, setBlockchainStatus] = useState<BlockchainStatusData | null>(null);
+  const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
+  const [fines, setFines] = useState<FineAssessment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +35,15 @@ export const useIoTData = (entityType: EntityType, entityId: string) => {
           // Calculate green credit score using our AI model
           const score = await calculateGreenScore(entityType, data);
           setCreditScore(score);
+          
+          // Get AI-generated sustainability recommendations and fines
+          const { recommendations, fines } = await getSustainabilityRecommendations(
+            entityType,
+            data,
+            score
+          );
+          setRecommendations(recommendations);
+          setFines(fines);
           
           // Store the data and score on blockchain
           const status = await storeOnBlockchain(entityType, entityId, data, score);
@@ -59,5 +71,13 @@ export const useIoTData = (entityType: EntityType, entityId: string) => {
     };
   }, [entityType, entityId]);
 
-  return { sensorData, creditScore, blockchainStatus, isLoading, error };
+  return { 
+    sensorData, 
+    creditScore, 
+    blockchainStatus, 
+    recommendations,
+    fines,
+    isLoading, 
+    error 
+  };
 };

@@ -7,8 +7,10 @@ import IoTDataFeed from '@/components/iot/IoTDataFeed';
 import GreenCreditScore from '@/components/iot/GreenCreditScore';
 import BlockchainStatus from '@/components/iot/BlockchainStatus';
 import EntitySelector from '@/components/iot/EntitySelector';
+import SustainabilityRecommendations from '@/components/iot/SustainabilityRecommendations';
 import { useIoTData } from '@/hooks/useIoTData';
 import { EntityType } from '@/types/iot';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const IoTDashboard = () => {
   const [selectedEntityType, setSelectedEntityType] = useState<EntityType>('company');
@@ -16,7 +18,9 @@ const IoTDashboard = () => {
   const { 
     sensorData, 
     creditScore, 
-    blockchainStatus, 
+    blockchainStatus,
+    recommendations,
+    fines,
     isLoading, 
     error 
   } = useIoTData(selectedEntityType, selectedEntityId);
@@ -57,23 +61,41 @@ const IoTDashboard = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          {isLoading ? (
-            <div className="col-span-full flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ecosync-green-dark"></div>
-            </div>
-          ) : error ? (
-            <div className="col-span-full text-center py-20 text-destructive">
-              <p>Error loading data: {error}</p>
-            </div>
-          ) : (
-            <>
-              <IoTDataFeed sensorData={sensorData} entityType={selectedEntityType} />
-              <GreenCreditScore score={creditScore} entityType={selectedEntityType} />
-              <BlockchainStatus status={blockchainStatus} />
-            </>
-          )}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ecosync-green-dark"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 text-destructive">
+            <p>Error loading data: {error}</p>
+          </div>
+        ) : (
+          <Tabs defaultValue="dashboard" className="w-full">
+            <TabsList className="w-full mb-6 grid grid-cols-2">
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="recommendations">Recommendations & Compliance</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="dashboard">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <IoTDataFeed sensorData={sensorData} entityType={selectedEntityType} />
+                <GreenCreditScore score={creditScore} entityType={selectedEntityType} />
+                <BlockchainStatus status={blockchainStatus} />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="recommendations">
+              <div className="grid grid-cols-1 gap-6 mb-10">
+                <SustainabilityRecommendations 
+                  recommendations={recommendations}
+                  fines={fines}
+                  entityType={selectedEntityType}
+                  isLoading={isLoading}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
       </main>
       <Footer />
     </motion.div>
